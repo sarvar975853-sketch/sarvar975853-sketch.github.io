@@ -53,6 +53,9 @@
 
         // In-Page Push (native-style notifications)
         in_page_push: "",
+
+        // Popunder (opens on first click)
+        popunder: '<script src="https://pl30083381.effectivecpmnetwork.com/ac/44/8b/ac448bab40fa3ad3b352611f4e725982.js"></script>',
     };
 
     // ─── Load Adsterra Script ──────────────────────────────────────────
@@ -71,6 +74,9 @@
         }
         if (AD_UNITS.in_page_push) {
             injectScript(AD_UNITS.in_page_push, "ad-push");
+        }
+        if (AD_UNITS.popunder) {
+            injectScript(AD_UNITS.popunder, "ad-popunder");
         }
     }
 
