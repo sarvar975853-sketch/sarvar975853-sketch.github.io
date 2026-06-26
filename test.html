@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head><title>Ad Test</title></head>
+<body>
+    <h2>Top Banner (728x90)</h2>
+    <div id="banner1"></div>
+
+    <h2>Sidebar (300x250)</h2>
+    <div id="banner2"></div>
+
+    <h2>Bottom Banner (728x90)</h2>
+    <div id="banner3"></div>
+
+    <script>
+        function loadAd(containerId, w, h) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+
+            var config = document.createElement("script");
+            config.text = "atOptions={key:'5a7b0a08c8d19f0201beca066b7c994a',format:'iframe',height:" + h + ",width:" + w + ",params:{}}";
+            container.appendChild(config);
+
+            var invoke = document.createElement("script");
+            invoke.src = "https://www.highperformanceformat.com/5a7b0a08c8d19f0201beca066b7c994a/invoke.js";
+            container.appendChild(invoke);
+        }
+
+        loadAd("banner1", 728, 90);
+        loadAd("banner2", 300, 250);
+        loadAd("banner3", 728, 90);
+    </script>
+
+    <script>
+        // Popunder
+        document.addEventListener("click", function() {
+            var s = document.createElement("script");
+            s.src = "https://pl30083381.effectivecpmnetwork.com/ac/44/8b/ac448bab40fa3ad3b352611f4e725982.js";
+            document.head.appendChild(s);
+        }, { once: true });
+    </script>
+</body>
+</html>
