@@ -10,13 +10,46 @@
 
     const AD_UNITS = {
         // Top banner (728x90)
-        top_banner: "",
+        top_banner: `
+            <script>
+              atOptions = {
+                'key' : '5a7b0a08c8d19f0201beca066b7c994a',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/5a7b0a08c8d19f0201beca066b7c994a/invoke.js"></script>
+        `,
 
         // Sidebar banner (300x250)
-        sidebar_banner: "",
+        sidebar_banner: `
+            <script>
+              atOptions = {
+                'key' : '5a7b0a08c8d19f0201beca066b7c994a',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/5a7b0a08c8d19f0201beca066b7c994a/invoke.js"></script>
+        `,
 
         // Bottom banner (728x90)
-        bottom_banner: "",
+        bottom_banner: `
+            <script>
+              atOptions = {
+                'key' : '5a7b0a08c8d19f0201beca066b7c994a',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/5a7b0a08c8d19f0201beca066b7c994a/invoke.js"></script>
+        `,
 
         // In-Page Push (native-style notifications)
         in_page_push: "",
@@ -46,17 +79,10 @@
         var container = document.getElementById(containerId);
         if (!container) return;
 
-        // If it's a full <script> tag string, inject directly
-        if (scriptCode.indexOf("<script") !== -1) {
-            container.innerHTML = scriptCode;
-            return;
-        }
-
-        // If it's just a URL, create a script element
-        var script = document.createElement("script");
-        script.src = scriptCode;
-        script.async = true;
-        container.appendChild(script);
+        // Parse and inject all script tags from the code
+        var wrapper = document.createElement("div");
+        wrapper.innerHTML = scriptCode;
+        container.appendChild(wrapper);
     }
 
     // ─── Helper: Inject Adsterra Smartlink ─────────────────────────────
