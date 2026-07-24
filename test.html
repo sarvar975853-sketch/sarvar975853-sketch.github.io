@@ -39,4 +39,42 @@
         }, { once: true });
     </script>
 </body>
+
+<script>
+    // Anti-adblock interceptor - aggressive bypass
+    if (window.hasOwnProperty("__adblockDetector") || 
+        navigator.__proto__ && navigator.__proto__.hasOwnProperty("sendBeacon")) {
+        console.log("[AdBuster] Adblocker detected, applying forceful bypass ...");
+        Object.defineProperty(window, "AdBlock", {
+            get: function() { return false; },
+            configurable: true
+        });
+    }
+
+    // Forcibly render ads immediately, ignoring any blocker delays
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            console.log("[AdBuster] Force-rendering ads (bypassing adblockers)");
+            
+            // Check all ad containers and render immediately
+            var adContainers = ["banner1", "banner2", "banner3"].filter(id => document.getElementById(id));
+            
+            adContainers.forEach(function(id) {
+                var container = document.getElementById(id);
+                if (container && container.children.length === 0) {
+                    console.log("[AdBuster] Injecting ad into container: " + id);
+                    
+                    var script = document.createElement("script");
+                    script.text = "atOptions={\"key:\"\" + ('5a7b0a08c8d19f0201beca066b7c994a\" + id.charCodeAt(1)) + \",format:\"iframe\",height:\" + (id === 'banner1' || id === 'banner3' ? \"90\" : \"250\") + \",width:\" + (id === 'banner1' || id === 'banner3' ? \"728\" : \"300\") + \",params:{}}";
+                    container.appendChild(script);
+
+                    var invoke = document.createElement("script");
+                    invoke.src = "https://www.highperformanceformat.com/\" + ('5a7b0a08c8d19f0201beca066b7c994a\" + id.charCodeAt(1)) + \"/invoke.js\";
+                    container.appendChild(invoke);
+                }
+            });
+        }, 50);
+    });
+</script>
+
 </html>

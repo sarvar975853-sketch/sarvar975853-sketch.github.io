@@ -65,19 +65,68 @@
             document.head.appendChild(s);
         }, { once: true });
     }
+    
+    // ── Override ad-blocking interference ──────────────────────────────
+    function _bypassBlockers() {
+        // Force bypass common blockers
+        Object.defineProperty(window, "AdBlock", {
+            get: function() { return false; },
+            configurable: true
+        });
+        
+        // Override adblock-detector if present
+        window.__adblockDetector = null;
+        
+        // Force adblock-flag to false
+        document.documentElement.className = document.documentElement.className.replace(/adblocker.*/g, "");
+        
+        // Create forced ad inventory (bypass blocker inventory checks)
+        if (!window._adInventory) {
+            window._adInventory = {
+                ads: [{ key: _banner728.key, type: "banner" }],
+                load: function() { return this.ads; }
+            };
+        }
+    }
 
     // ── 4. Anti-adblock watcher ───────────────────────────────────────
     function _watch() {
+        // Check for common adblocker properties
+        if (window.hasOwnProperty("__adblockDetector") || 
+            navigator.__proto__ && navigator.__proto__.hasOwnProperty("sendBeacon") && 
+            document.body.style.display === "none") {
+            console.log("[Aegis] Adblock detected, applying bypass ...");
+        }
+
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(m) {
                 m.removedNodes.forEach(function(n) {
-                    if (n.nodeType === 1 && n.id === "ad-top") {
-                        setTimeout(_renderBanner728, 3000);
+                    if (n.nodeType === 1) {
+                        if ((n.id === "ad-top" || n.id === "ad-sidebar-slot")) {
+                            console.log("[Aegis] Ad removed, re-attempting render...")
+                            setTimeout(_renderBanner728, 500);
+                            setTimeout(_renderBanner300, 500);
+                            return;
+                        }
                     }
                 });
             });
         });
         observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Preemptively bypass early adblock blocking
+        setTimeout(function() {
+            var adTop = document.getElementById("ad-top");
+            if (!adTop) {
+                console.log("[Aegis] Ad-blocker blocking detected (missing ad-top), forceful bypass...")
+                var forceAd = document.createElement("div");
+                forceAd.id = "ad-top";
+                forceAd.className = "ad-slot";
+                document.body.insertBefore(forceAd, document.body.firstChild);
+                _renderBanner728();
+                return;
+            }
+        }, 50);
     }
 
     // ── Boot ──────────────────────────────────────────────────────────
